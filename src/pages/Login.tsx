@@ -1,17 +1,17 @@
 import { FormEvent, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button, Label, TextInput } from "flowbite-react";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 
-import { IconMailFilled } from "@/icons/IconMailFilled";
-import { IconPassword } from "@/icons/IconPassword";
-import { IconShieldCheck } from "@/icons/IconShieldCheck";
-import { useAuthContext } from "@/contexts/AuthContext";
+import { auth } from "@/lib/firebase/client";
 
-export const RegisterPage = () => {
+import { IconMailFilled, IconPassword } from "@/icons";
+
+const Login = () => {
   const [loading, setLoading] = useState(false);
-  const [passwordMatch, setPasswordMatch] = useState(true);
 
-  const authContext = useAuthContext();
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
 
@@ -22,21 +22,8 @@ export const RegisterPage = () => {
 
     const email = event.currentTarget.email.value;
     const password = event.currentTarget.password.value;
-    const repeatPassword = event.currentTarget.repeatPassword.value;
 
-    if (password !== repeatPassword) {
-      console.error("Passwords do not match");
-
-      setLoading(false);
-      setPasswordMatch(false);
-
-      return;
-    }
-
-    console.log({ email, password });
-    authContext?.signup(email, password);
-    authContext
-      ?.signup(email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed up
         const user = userCredential.user;
@@ -58,16 +45,15 @@ export const RegisterPage = () => {
   return (
     <section className="flex justify-center items-center flex-col p-6">
       <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-300 mb-2">
-        Register
+        {t("login.signIn")}
       </h1>
       <form
         className="flex max-w-md flex-col gap-4 w-full"
         onSubmit={handleSubmit}
-        // onChange={handleFormChange}
       >
         <div>
           <div className="mb-2 block">
-            <Label htmlFor="email" value="Your email" />
+            <Label htmlFor="email" value={t("login.fields.email.label")} />
           </div>
           <TextInput
             disabled={loading}
@@ -75,7 +61,7 @@ export const RegisterPage = () => {
               <IconMailFilled className="w-4 h-4 fill-gray-600 dark:fill-gray-400" />
             )}
             id="email"
-            placeholder="example@mail.com"
+            placeholder={t("login.fields.email.placeholder")}
             required
             sizing="sm"
             type="email"
@@ -83,7 +69,10 @@ export const RegisterPage = () => {
         </div>
         <div>
           <div className="mb-2 block">
-            <Label htmlFor="password" value="Your password" />
+            <Label
+              htmlFor="password"
+              value={t("login.fields.password.label")}
+            />
           </div>
           <TextInput
             disabled={loading}
@@ -91,24 +80,7 @@ export const RegisterPage = () => {
               <IconPassword className="w-4 h-4 stroke-gray-600 dark:stroke-gray-400" />
             )}
             id="password"
-            placeholder="Password"
-            required
-            sizing="sm"
-            type="password"
-          />
-        </div>
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="password" value="Repeat your password" />
-          </div>
-          <TextInput
-            disabled={loading}
-            icon={() => (
-              // <IconShieldX className="w-4 h-4 stroke-gray-600 dark:stroke-gray-400" />
-              <IconShieldCheck className="w-4 h-4 stroke-gray-600 dark:stroke-gray-400" />
-            )}
-            id="repeatPassword"
-            placeholder="Repeat your password"
+            placeholder={t("login.fields.password.placeholder")}
             required
             sizing="sm"
             type="password"
@@ -120,45 +92,43 @@ export const RegisterPage = () => {
           gradientDuoTone="tealToLime"
           type="submit"
         >
-          Sign up
+          {t("login.signIn")}
         </Button>
         {/* <Button
-          disabled
-          size={"sm"}
-          color="#24292F"
-          className="bg-[#24292F] hover:bg-[#24292F]/90 focus:ring-4
-        focus:outline-none focus:ring-[#24292F]/50 dark:focus:ring-gray-500 dark:hover:bg-[#050708]/50"
-        >
-          <IconGithub className="w-4 h-4 me-2" />
-          Sign in with GitHub
-        </Button> */}
-        {/* <Button
-          disabled
+          disabled={loading}
           size={"sm"}
           color="#4285F4"
+          onClick={handleGoogleAuth}
           className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/10 dark:focus:ring-[#4285F4]/55"
         >
           <IconGoogle className="w-4 h-4 me-2" />
           Sign in with Google
         </Button> */}
-        {!passwordMatch ? (
-          <p className="opacity-75 text-pretty text-red-600">
-            Password do not match
-          </p>
-        ) : null}
+        {/* <Button
+        disabled
+        size={"sm"}
+        color="#24292F"
+        className="bg-[#24292F] hover:bg-[#24292F]/90 focus:ring-4
+      focus:outline-none focus:ring-[#24292F]/50 dark:focus:ring-gray-500 dark:hover:bg-[#050708]/50"
+      >
+        <IconGithub className="w-4 h-4 me-2" />
+        Sign in with GitHub
+      </Button> */}
       </form>
 
       <div className="mt-6">
         <p className="opacity-75 text-pretty text-slate-900 dark:text-slate-300">
-          Already have an account?{" "}
+          {t("signUp.newHere")}{" "}
           <Link
             className="text-blue-600 dark:text-blue-400 hover:opacity-75 cursor-pointer"
-            to="/login"
+            to="/auth/register"
           >
-            Sign in
+            {t("signUp.createAccount")}
           </Link>
         </p>
       </div>
     </section>
   );
 };
+
+export default Login;

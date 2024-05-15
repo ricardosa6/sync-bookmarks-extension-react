@@ -2,36 +2,49 @@ import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { Spinner } from "flowbite-react";
 
 import { AppLayout } from "@/layouts/AppLayout";
-import { LoginPage } from "@/pages/LoginPage";
-import { RegisterPage } from "@/pages/RegisterPage";
-import { HomePage } from "@/pages/HomePage";
+import { AuthLayout } from "./layouts/AuthLayout";
+
 import { PrivateRoutes } from "@/utils/routes";
+
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
+import Home from "@/pages/Home";
+import Settings from "./pages/Settings";
 
 import "./App.css";
 
 const router = createMemoryRouter([
   {
     element: <AppLayout />,
-    // loader: rootLoader,
     errorElement: <div>Error page</div>,
     children: [
       {
         path: "/",
-        // index: true
         element: <PrivateRoutes />,
-        children: [{ path: "/", element: <HomePage /> }],
-        // loader: teamLoader,
+        children: [
+          {
+            path: "/",
+            element: <Home />,
+          },
+          {
+            path: "/settings",
+            element: <Settings />,
+          },
+        ],
       },
-      // { path: "*", element: <div>404</div> },
       {
-        path: "/login",
-        element: <LoginPage />,
-        // loader: teamLoader,
-      },
-      {
-        path: "/register",
-        element: <RegisterPage />,
-        // loader: teamLoader,
+        element: <AuthLayout />,
+        path: "/auth",
+        children: [
+          {
+            path: "/auth/login",
+            element: <Login />,
+          },
+          {
+            path: "/auth/register",
+            element: <Register />,
+          },
+        ],
       },
     ],
   },

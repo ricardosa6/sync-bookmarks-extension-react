@@ -14,6 +14,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 type AuthContextType = {
   currentUser?: User | null;
+  loading: boolean;
   login: (email: string, password: string) => Promise<UserCredential>;
   signup: (email: string, password: string) => Promise<UserCredential>;
   logout: () => Promise<void>;
@@ -27,18 +28,22 @@ export const useAuthContext = () => {
   return useContext(AuthContext);
 };
 
-export const AuthProvider = ({ children }: { children: JSX.Element }) => {
+export const AuthProvider = ({
+  children,
+}: {
+  children: JSX.Element[] | JSX.Element;
+}) => {
   const [currentUser, setCurrentUser] = useState<User | null>();
   const [loading, setLoading] = useState(true);
 
   const signup = async (
     email: string,
-    password: string
+    password: string,
   ): Promise<UserCredential> => {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
-      password
+      password,
     );
 
     await setDoc(doc(db, "users", userCredential.user.uid), {
@@ -78,8 +83,9 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     return unsubscribe;
   }, []);
 
-  const value = {
+  const value: AuthContextType = {
     currentUser,
+    loading,
     login,
     signup,
     logout,
@@ -88,9 +94,5 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     // updatePassword,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

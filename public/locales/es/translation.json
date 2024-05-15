@@ -1,0 +1,52 @@
+{
+  "common": {
+    "cancel": "Cancelar"
+  },
+  "home": {
+    "bookmarksSynced": "Marcadores sincronizados: {{count}}",
+    "sync": "Sincronizar",
+    "title": "👋 Hola {{email}}"
+  },
+  "languages": {
+    "en": "Inglés",
+    "es": "Español"
+  },
+  "login": {
+    "fields": {
+      "email": {
+        "label": "Email"
+      },
+      "password": {
+        "label": "Contraseña",
+        "placeholder": "Contraseña"
+      }
+    },
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse"
+  },
+  "settings": {
+    "fields": {
+      "languagesLabel": "Selecciona idioma"
+    },
+    "title": "Configuración"
+  },
+  "signOut": {
+    "buttonLabel": "Cerrar sesión",
+    "modal": {
+      "message": "¿Estás seguro de que deseas cerrar sesión?",
+      "title": "Cerrar sesión"
+    }
+  },
+  "signUp": {
+    "createAccount": "Crear cuenta",
+    "newHere": "Eres nuevo?",
+    "register": "Registro",
+    "alreadyHaveAccount": "Ya tienes una cuenta?",
+    "fields": {
+      "repeatPassword": {
+        "label": "Repite contraseña",
+        "placeholder": "Repite contraseña"
+      }
+    }
+  }
+}
